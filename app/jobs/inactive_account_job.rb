@@ -2,22 +2,28 @@
 class InactiveAccountJob < ApplicationJob
   queue_as :default
 
+  LIMIT = 1000
   INACTIVE_WITH_DEVICE = 11.months.ago
   INACTIVE_NO_DEVICE = 3.months.ago
 
-  WARNING_INTERVALS = {
-    1 => 30.days,
-    2 => 7.days,
-    3 => 1.day,
-  }
+  WARNING_INTERVALS = { 0 => 30.days,
+                       1 => 7.days,
+                       2 => 1.day }
 
-  def perform(limit = 1000)
-    send_first_warning
-    send_second_warning
-    send_third_warning
+  def perform
+    binding.pry
   end
 
   private
+
+  def send_first_warning
+  end
+
+  def send_second_warning
+  end
+
+  def send_third_warning
+  end
 
   def all_inactive
     return @all_inactive if @all_inactive
@@ -34,10 +40,10 @@ class InactiveAccountJob < ApplicationJob
       .where.not("devices.fbos_version" => nil)
       .references(:devices)
 
-    inactive_3mo = nay_device.where("last_sign_in_at < ?")
+    inactive_3mo = nay_device.where("last_sign_in_at < ?", INACTIVE_NO_DEVICE)
     inactive_11mo = yay_device.where("last_sign_in_at < ?", INACTIVE_WITH_DEVICE)
 
     @all_inactive =
-      inactive_11mo.or(inactive_3mo).order(updated_at: :desc).limit(limit)
+      inactive_11mo.or(inactive_3mo).order(updated_at: :desc).limit(LIMIT)
   end
 end

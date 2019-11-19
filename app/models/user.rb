@@ -55,6 +55,8 @@ class User < ApplicationRecord
       .raw_amqp_send(msg.to_json, Api::RmqUtilsController::PUBLIC_BROADCAST)
   end
 
+  # The web app deletes account that go inactive for long periods.
+  # It is called when the user logs in to the app.
   def reset_inactivity_tracker!
     update!(inactivity_warning_sent_at: nil, inactivity_warning_count: 0)
   end
