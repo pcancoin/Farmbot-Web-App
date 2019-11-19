@@ -82,4 +82,19 @@ describe Device do
     device.update!(ota_hour: 4)
     expect(device.ota_hour).to eq(4)
   end
+
+  it "deletes old accounts" do
+    # Question:
+    #   * How many people have active devices but have not signed in in over 11 months?
+
+    nay_device = User.includes(:device).where("devices.fbos_version" => nil).references(:devices)
+    yay_device = User.includes(:device).where.not("devices.fbos_version" => nil).references(:devices)
+
+    inactive_3mo = nay_device.where("last_sign_in_at < ?", 3.months.ago)
+    inactive_11mo = yay_device.where("last_sign_in_at < ?", 11.months.ago)
+
+    both = inactive_11mo.or(inactive_3mo)
+
+    raise "TODO: Finish this."
+  end
 end
