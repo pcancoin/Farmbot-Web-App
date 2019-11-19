@@ -1370,7 +1370,7 @@ CREATE VIEW public.resource_update_steps AS
             edge_nodes.kind,
             edge_nodes.value
            FROM public.edge_nodes
-          WHERE (((edge_nodes.kind)::text = 'resource_type'::text) AND ((edge_nodes.value)::text = ANY ((ARRAY['"GenericPointer"'::character varying, '"ToolSlot"'::character varying, '"Plant"'::character varying])::text[])))
+          WHERE (((edge_nodes.kind)::text = 'resource_type'::text) AND ((edge_nodes.value)::text = ANY (ARRAY[('"GenericPointer"'::character varying)::text, ('"ToolSlot"'::character varying)::text, ('"Plant"'::character varying)::text])))
         ), resource_id AS (
          SELECT edge_nodes.primary_node_id,
             edge_nodes.kind,
@@ -1648,7 +1648,9 @@ CREATE TABLE public.users (
     confirmation_token character varying,
     agreed_to_terms_at timestamp without time zone,
     confirmation_sent_at timestamp without time zone,
-    unconfirmed_email character varying
+    unconfirmed_email character varying,
+    inactivity_warning_sent_at timestamp without time zone,
+    inactivity_warning_count integer
 );
 
 
@@ -3366,6 +3368,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190924190539'),
 ('20190930202839'),
 ('20191002125625'),
-('20191107170431');
+('20191107170431'),
+('20191119204916');
 
 

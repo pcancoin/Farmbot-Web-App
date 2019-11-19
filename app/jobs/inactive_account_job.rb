@@ -12,16 +12,32 @@ class InactiveAccountJob < ApplicationJob
   }
 
   def perform(limit = 1000)
-    nay_device = User.includes(:device).where("devices.fbos_version" => nil).references(:devices)
-    yay_device = User.includes(:device).where.not("devices.fbos_version" => nil).references(:devices)
+    send_first_warning
+    send_second_warning
+    send_third_warning
+  end
+
+  private
+
+  def all_inactive
+    return @all_inactive if @all_inactive
+
+    # They signed up for an account, but never configured a device.
+    nay_device = User
+      .includes(:device)
+      .where("devices.fbos_version" => nil)
+      .references(:devices)
+
+    # They signed up for an account and once had a working device.
+    yay_device = User
+      .includes(:device)
+      .where.not("devices.fbos_version" => nil)
+      .references(:devices)
 
     inactive_3mo = nay_device.where("last_sign_in_at < ?")
     inactive_11mo = yay_device.where("last_sign_in_at < ?", INACTIVE_WITH_DEVICE)
 
-    both = inactive_11mo.or(inactive_3mo).order(updated_at: :desc).limit(limit)
-
-    send_first_warning
-    send_second_warning
-    send_third_warning
+    @all_inactive =
+      inactive_11mo.or(inactive_3mo).order(updated_at: :desc).limit(limit)
   end
 end

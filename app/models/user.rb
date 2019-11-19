@@ -54,4 +54,8 @@ class User < ApplicationRecord
       .current
       .raw_amqp_send(msg.to_json, Api::RmqUtilsController::PUBLIC_BROADCAST)
   end
+
+  def reset_inactivity_tracker!
+    update!(inactivity_warning_sent_at: nil, inactivity_warning_count: 0)
+  end
 end
