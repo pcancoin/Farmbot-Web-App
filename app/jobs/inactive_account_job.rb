@@ -1,4 +1,5 @@
 # Recurring task that deletes inactive accounts.
+# Recurring task that deletes inactive accounts.
 class InactiveAccountJob < ApplicationJob
   queue_as :default
 
@@ -11,18 +12,7 @@ class InactiveAccountJob < ApplicationJob
                        2 => 1.day }
 
   def perform
-    binding.pry
-  end
-
-  private
-
-  def send_first_warning
-  end
-
-  def send_second_warning
-  end
-
-  def send_third_warning
+    raise "TODO"
   end
 
   def all_inactive
