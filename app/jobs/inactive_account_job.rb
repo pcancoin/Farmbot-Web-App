@@ -1,5 +1,4 @@
 # Recurring task that deletes inactive accounts.
-# Recurring task that deletes inactive accounts.
 class InactiveAccountJob < ApplicationJob
   queue_as :default
 
@@ -7,14 +6,23 @@ class InactiveAccountJob < ApplicationJob
   INACTIVE_WITH_DEVICE = 11.months.ago
   INACTIVE_NO_DEVICE = 3.months.ago
 
-  WARNING_INTERVALS = { 0 => 30.days,
-                       1 => 7.days,
-                       2 => 1.day }
+  WARNING_INTERVALS = { 1 => 30.days, 2 => 7.days, 3 => 1.day }
 
   def perform
-    raise "TODO"
+    send_first_warning
   end
 
+  def send_first_warning
+    all_inactive
+      .where(inactivity_warning_count: [0, nil])
+      .where(inactivity_warning_sent_at: nil)
+      .map { |u| u.send_inactivity_warning(1, WARNING_INTERVALS[1]) }
+  end
+
+  private
+
+  # Returns a Map. Key is the number of warnings sent, value is a User object
+  # (not a device, but device is preloaded)
   def all_inactive
     return @all_inactive if @all_inactive
 
@@ -32,8 +40,9 @@ class InactiveAccountJob < ApplicationJob
 
     inactive_3mo = nay_device.where("last_sign_in_at < ?", INACTIVE_NO_DEVICE)
     inactive_11mo = yay_device.where("last_sign_in_at < ?", INACTIVE_WITH_DEVICE)
-
-    @all_inactive =
-      inactive_11mo.or(inactive_3mo).order(updated_at: :desc).limit(LIMIT)
+    @all_inactive = inactive_11mo
+      .or(inactive_3mo)
+      .order("RANDOM()")
+      .limit(LIMIT)
   end
 end

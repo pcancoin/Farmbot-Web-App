@@ -60,4 +60,10 @@ class User < ApplicationRecord
   def reset_inactivity_tracker!
     update!(inactivity_warning_sent_at: nil, inactivity_warning_count: 0)
   end
+
+  def send_inactivity_warning(warning_number, next_warning)
+    self.update!(inactivity_warning_count: warning_number,
+                 inactivity_warning_sent_at: Time.now + next_warning)
+    InactivityMailer.send_warning(self).deliver_later
+  end
 end

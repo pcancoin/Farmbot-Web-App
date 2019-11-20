@@ -82,8 +82,4 @@ describe Device do
     device.update!(ota_hour: 4)
     expect(device.ota_hour).to eq(4)
   end
-
-  it "deletes old accounts" do
-    raise "TODO: Finish this."
-  end
 end
