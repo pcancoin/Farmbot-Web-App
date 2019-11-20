@@ -12,6 +12,6 @@ class InactivityMailer < ApplicationMailer
   end
 
   def warning_ordinality
-    @warning_ordinality ||= ORDER.fetch(user.inactivity_warning_count)
+    @warning_ordinality ||= ORDER.fetch(user.inactivity_warning_count || 1)
   end
 end
