@@ -29,6 +29,7 @@ export const getLinks = (): NavLinkParams[] => betterCompact([
   { name: "Farm Designer", icon: "leaf", slug: "designer" },
   { name: "Controls", icon: "keyboard-o", slug: "controls" },
   { name: "Device", icon: "cog", slug: "device" },
+  { name: "Weather", icon: "leaf", slug: "weather" },
   {
     name: "Sequences", icon: "server", slug: "sequences",
     computeHref: computeEditorUrlFromState("Sequence")
@@ -68,7 +69,7 @@ export const NavLinks = (props: NavLinksProps) => {
                 <p>{props.alertCount}</p>
               </div>}
           </div>
-        </Link>;
+        </Link>;  
       })}
     </div>
   </div>;

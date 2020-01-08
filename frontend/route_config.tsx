@@ -121,6 +121,12 @@ export const UNBOUND_ROUTES = [
   }),
   route({
     children: false,
+    $: "/weather",
+    getModule: () => import("./weather"),
+    key: "Weather",
+  }),
+  route({
+    children: false,
     $: "/farmware(/:name)",
     getModule: () => import("./farmware"),
     key: "FarmwarePage",
