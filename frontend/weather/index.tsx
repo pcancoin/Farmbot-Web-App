@@ -2,14 +2,7 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { mapStateToProps } from "./state_to_props";
 
-import { TaggedSensor, TaggedSensorReading } from "farmbot";
-
-interface Props {
-    sensors: TaggedSensor[];
-    sensorReadings: TaggedSensorReading[];
-}
-
-//import { Props } from "./interfaces";
+import { Props } from "./interfaces";
 
 import { Col, Page } from "../ui";
 
