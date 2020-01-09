@@ -1,16 +1,31 @@
 import * as React from "react";
 import { connect } from "react-redux";
-//import { Props } from "./interfaces";
+import { mapStateToProps } from "./state_to_props";
 
-import { Page } from "../ui";
+import { TaggedSensor, TaggedSensorReading } from "farmbot";
 
-export class RawWeather extends React.Component<{}, {}> {
-
-  render() {
-    return <Page className="tools-page">
-        <h1>Weather</h1>
-    </Page>;
-  }
+interface Props {
+    sensors: TaggedSensor[];
+    sensorReadings: TaggedSensorReading[];
 }
 
-export const Weather = connect(null)(RawWeather);
+//import { Props } from "./interfaces";
+
+import { Col, Page } from "../ui";
+
+export class RawWeather extends React.Component<Props, {}> {
+    render() {
+        console.log("====================================");
+        console.log(this.props);
+        console.log("====================================");
+        return (
+            <Page className="weather-page">
+                <Col xs={12} sm={12}>
+                    <h1>Weather</h1>
+                </Col>
+            </Page>
+        );
+    }
+}
+
+export const Weather = connect(mapStateToProps)(RawWeather);
